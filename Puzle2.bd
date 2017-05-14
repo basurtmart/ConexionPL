@@ -1,0 +1,72 @@
+% Base de conocimiento
+% izquierda
+izquierda([A,B,C,D,E,F,G,H,0],[A,B,C,D,E,F,G,0,H]).
+izquierda([A,B,C,D,E,F,G,0,H],[A,B,C,D,E,F,0,G,H]).
+izquierda([A,B,C,D,E,0,F,G,H],[A,B,C,D,0,E,F,G,H]).
+izquierda([A,B,C,D,0,E,F,G,H],[A,B,C,0,D,E,F,G,H]).
+izquierda([A,B,0,C,D,E,F,G,H],[A,0,B,C,D,E,F,G,H]).
+izquierda([A,0,B,C,D,E,F,G,H],[0,A,B,C,D,E,F,G,H]).
+% derecha
+derecha([A,B,C,D,E,F,G,0,H],[A,B,C,D,E,F,G,H,0]).
+derecha([A,B,C,D,E,F,0,G,H],[A,B,C,D,E,F,G,0,H]).
+derecha([A,B,C,D,0,E,F,G,H],[A,B,C,D,E,0,F,G,H]).
+derecha([A,B,C,0,D,E,F,G,H],[A,B,C,D,0,E,F,G,H]).
+derecha([A,0,B,C,D,E,F,G,H],[A,B,0,C,D,E,F,G,H]).
+derecha([0,A,B,C,D,E,F,G,H],[A,0,B,C,D,E,F,G,H]).
+% arriba
+arriba([A,B,C,D,E,F,G,H,0],[A,B,C,D,E,0,G,H,F]).
+arriba([A,B,C,D,E,F,G,0,H],[A,B,C,D,0,F,G,E,H]).
+arriba([A,B,C,D,E,F,0,G,H],[A,B,C,0,E,F,D,G,H]).
+arriba([A,B,C,D,E,0,F,G,H],[A,B,0,D,E,C,F,G,H]).
+arriba([A,B,C,D,0,E,F,G,H],[A,0,C,D,B,E,F,G,H]).
+arriba([A,B,C,0,D,E,F,G,H],[0,B,C,A,D,E,F,G,H]).
+% abajo
+abajo([A,B,C,D,E,0,F,G,H],[A,B,C,D,E,H,F,G,0]).
+abajo([A,B,C,D,0,E,F,G,H],[A,B,C,D,G,E,F,0,H]).
+abajo([A,B,C,0,D,E,F,G,H],[A,B,C,F,D,E,0,G,H]).
+abajo([A,B,0,C,D,E,F,G,H],[A,B,E,C,D,0,F,G,H]).
+abajo([A,0,B,C,D,E,F,G,H],[A,D,B,C,0,E,F,G,H]).
+abajo([0,A,B,C,D,E,F,G,H],[C,A,B,0,D,E,F,G,H]).
+
+% Movimeintos del puzzle
+mover(P,C,izquierda):-izquierda(P,C).
+mover(P,C,derecha):-derecha(P,C).
+mover(P,C,arriba):-arriba(P,C).
+mover(P,C,abajo):-abajo(P,C).
+
+% Predicado de es miembro
+miembro(X,[X|_]):-!.
+miembro(X,[_|Resto]):-miembro(X,Resto).
+
+primerelemento([X|_],X):-!.
+eliminarprimerelemento([_|Resto],Resto):-!.
+
+inversa([],[]).
+inversa([X|L1],L):-inversa(L1,Resto),concatenar(Resto,[X],L).
+
+concatenar([],X,X).
+concatenar([X|ColaX],Lista2,[X|ColaY]):-concatenar(ColaX,Lista2,ColaY).
+
+generador_estados(P,C):-findall(X,mover(P,X,_),C).
+
+caminos(_,[],[]):-!.
+caminos(Ea,[Cabeza|Resto],Camino):-caminos(Ea,Resto,CaminoResto),!,append([[Ea,Cabeza]],CaminoResto,Camino).
+
+resolveramp(EI,EF):-amplitud([EI],[],EF,[EI]).
+resolverpro(EI,EF):-profundidad([EI],[],EF,[EI]).
+
+amplitud([EF|_],_,EF,[X|_]):-write(X),!.%inversa(Ruta,Z),primerelemento(Z,X),writeln(X),!.
+
+amplitud([EA|ColaEstado],ListVisitado,EF,Ruta):-paso3(EA,ColaEstado,ListVisitado,NColaEstado,NListVisitado,Ruta,RutaN),amplitud(NColaEstado,NListVisitado,EF,RutaN).
+
+paso3(Ea,CEstados, ListVisitados,CEstados,ListVisitados,Ruta,RutaN):- miembro(Ea,ListVisitados),eliminarprimerelemento(Ruta,RutaN),!.
+
+paso3(Ea,CEstados,ListVisitados,NCEstados,NListVisitados,[X|RestoX],RutaN):-generador_estados(Ea,ListGenerador),concatenar(CEstados,ListGenerador,NCEstados),concatenar(ListVisitados,[Ea],NListVisitados),caminos(X,ListGenerador,NX),concatenar(RestoX,NX,RutaN).
+
+profundidad([EF|_],_,EF,[X|_]):-write(X),!.%inversa(Ruta,Z),primerelemento(Z,X),writeln(X),!.
+
+profundidad([EA|ColaEstado],ListVisitado,EF,Ruta):-pasop(EA,ColaEstado,ListVisitado,NColaEstado,NListVisitado,Ruta,RutaN),profundidad(NColaEstado,NListVisitado,EF,RutaN).
+
+pasop(Ea,CEstados, ListVisitados,CEstados,ListVisitados,Ruta,RutaN):- miembro(Ea,ListVisitados),eliminarprimerelemento(Ruta,RutaN),!.
+
+pasop(Ea,CEstados,ListVisitados,NCEstados,NListVisitados,[X|RestoX],RutaN):-generador_estados(Ea,ListGenerador),concatenar(ListGenerador,CEstados,NCEstados),concatenar(ListVisitados,[Ea],NListVisitados),caminos(X,ListGenerador,NX),concatenar(NX,RestoX,RutaN).
