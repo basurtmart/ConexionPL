@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,20 +36,55 @@ namespace ConexioPL
 
             if (checkBox1.Checked == true)
             {
-                // PlQuery consulta1 = new PlQuery("resolveramp("+ valor1 + ","+ valor2 +")");
                 PlQuery consulta1 = new PlQuery("resolveramp(" + valor1 + "," + valor2 + ")");
-                foreach (PlTermV z in consulta1.Solutions)
-                {
-                    listBox1.Items.Add(z[0].ToString());
-                }
+                consulta1.NextSolution();
+
+                
             }
             if (checkBox2.Checked == true)
             {
                 PlQuery consulta2 = new PlQuery("resolverpro(" + valor1 + "," + valor2 + ")");
-                foreach (PlQueryVariables z in consulta2.SolutionVariables)
+                consulta2.NextSolution();
+            }
+
+            List<string> Entrada = LeerArchivo();
+            char[] seps = new char[] { '[',']',',' };
+            List<string> numbers = Entrada[0].Split(seps).ToList<string>();
+            List<string> numbers2 = new List<string>();
+            foreach (var i in numbers)
+            {
+                if (i != "")
                 {
-                    listBox1.Items.Add(z.ToString());
+                    numbers2.Add(i);
                 }
+            }
+        }
+
+        private List<string> LeerArchivo()
+        {
+            StreamReader sr = null;
+            string entrada;
+            List<string> entradas = new List<string>();
+            try
+            {
+                sr = new StreamReader(@"C:\\Users\\EliteBook\\Documents\\Prolog\\salida.txt");
+                entrada = sr.ReadLine();
+                while (entrada != null)
+                {
+                    entradas.Add(entrada);
+                    entrada = sr.ReadLine();
+                }
+                return entradas;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            finally
+            {
+                if (sr != null) sr.Close();
             }
         }
     }
