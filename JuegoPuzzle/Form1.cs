@@ -21,7 +21,7 @@ namespace JuegoPuzzle
         {
             InitializeComponent();
             tiempo.Tick += Tiempo_Tick;
-            tiempo.Interval= 2000;
+            tiempo.Interval= 1500;
         }
 
         private void Tiempo_Tick(object sender, EventArgs e)
@@ -30,6 +30,7 @@ namespace JuegoPuzzle
             if (z == filtro.Count)
             {
                 tiempo.Stop();
+                MessageBox.Show("Se termino la aminación","Información",MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -78,11 +79,13 @@ namespace JuegoPuzzle
             {
                 PlQuery consulta1 = new PlQuery("resolveramp(" + entrada + "," + salida + ")");
                 consulta1.NextSolution();
+                MessageBox.Show("Se termino el proceso de prolog", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             if (radioButton2.Checked == true)
             {
                 PlQuery consulta2 = new PlQuery("resolverpro(" + entrada + "," + salida + ")");
                 consulta2.NextSolution();
+                MessageBox.Show("Se termino el proceso de prolog", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             List<string> solucion = LeerArchivo();
