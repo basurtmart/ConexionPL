@@ -89,29 +89,7 @@ namespace JuegoPuzzle
             filtro = Filtrar(solucion);
             tiempo.Start();
         }
-
         
-        private void Amimacion(List<string> filtro)
-        {
-            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
-            t.Interval = 2000;
-
-            for (int i = 0; i < filtro.Count/9; i=i+9)
-            {
-                textBox19.Text = filtro[i];
-                textBox20.Text = filtro[i + 1];
-                textBox21.Text = filtro[i + 2];
-                textBox22.Text = filtro[i + 3];
-                textBox23.Text = filtro[i + 4];
-                textBox24.Text = filtro[i + 5];
-                textBox25.Text = filtro[i + 6];
-                textBox26.Text = filtro[i + 7];
-                textBox27.Text = filtro[i + 8];
-                tiempo.Start();
-            }
-            
-        }
-
         private List<string> Filtrar(List<string> solucion)
         {
             char[] seps = new char[] { '[', ']', ',' };
