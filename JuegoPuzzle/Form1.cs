@@ -30,7 +30,7 @@ namespace JuegoPuzzle
             if (z == filtro.Count)
             {
                 tiempo.Stop();
-                MessageBox.Show("Se termino la aminación","Información",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Se termino la animación","Información",MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
